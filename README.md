@@ -1,4 +1,4 @@
-# FolderView0 for Unraid 7+
+# FolderView0 for Unraid 7
 
 Group Docker containers and VMs into folders on the Docker and VMs tabs. Adds an **Add Folder**
 button next to "Add Container/VM". Handy if you run a lot of containers, especially with
@@ -42,7 +42,7 @@ Fixed here:
 
 See the changelog in `folder.view0.plg` for the detail on each.
 
-### Also the other fork (folder.view3) seems very bloated and overworked.
+### Also the other fork [folder.view3](https://github.com/chodeus/folder.view3) seems very bloated and overworked.
 
 ## Building
 
