@@ -6,12 +6,22 @@
 <!ENTITY launch "Settings/FolderView0">
 <!ENTITY plugdir "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/main/&name;.plg">
-<!ENTITY version "2026.08.05.2">
-<!ENTITY md5 "d1caa4e72b0e7bf0fc9999a68fbddaa4">
+<!ENTITY version "2026.08.05.3">
+<!ENTITY md5 "38b100012be448d8a8fc84ce5b7cd4f5">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="folder-open-o" support="https://github.com/YoshiroMaximus/folder.view0/issues" min="7.0.0">
     <CHANGES>
+
+###2026.08.05.3
+- New: The folder settings page is grouped into labelled sections (Basics, Preview, Appearance,
+  Behaviour, Container matching, Custom actions, Containers) instead of one flat list of 26 rows.
+- New: The container picker has a search box, Select all / Select none, and a selected count.
+  Filtering hides rows rather than removing them, so drag ordering and selections survive it.
+- Fix: Submit and Cancel sat above the container picker, so the page continued past its own
+  buttons. They are now at the end of the form.
+- Change: Picker rows were a fixed 5em tall in a 92vw table; tightened and centred so a long
+  container list is not mostly whitespace.
 
 ###2026.08.05.2
 - Change: Removed the "Incorrect autostart order" banner added in 2026.08.05. Once containers are

@@ -22,6 +22,7 @@ Markdown="false"
 
 <div class="canvas">
     <form onsubmit="submitForm(this); return false">
+        <div class="title"><span class="left"><i class="title fa fa-folder-o"></i><span data-i18n="section-basics">Basics</span></span></div>
         <div class="basic">
             <dl>
                 <dt data-i18n="name">Name:</dt>
@@ -56,6 +57,7 @@ Markdown="false"
                 </p>
             </blockquote>
         </div>
+        <div class="title"><span class="left"><i class="title fa fa-eye"></i><span data-i18n="section-preview">Preview</span></span></div>
         <div class="basic">
             <dl>
                 <dt data-i18n="preview">Preview:</dt>
@@ -278,6 +280,7 @@ Markdown="false"
             </li>
         </ul>
         
+        <div class="title"><span class="left"><i class="title fa fa-paint-brush"></i><span data-i18n="section-appearance">Appearance</span></span></div>
         <div class="basic">
             <dl>
                 <dt data-i18n="border">Show preview border:</dt>
@@ -323,6 +326,7 @@ Markdown="false"
                 </p>
             </blockquote>
         </div>
+        <div class="title"><span class="left"><i class="title fa fa-sliders"></i><span data-i18n="section-behaviour">Behaviour</span></span></div>
         <div class="basic">
             <dl>
                 <dt data-i18n="override-default-actions">Override default actions:</dt>
@@ -375,6 +379,7 @@ Markdown="false"
                 </p>
             </blockquote>
         </div>
+        <div class="title"><span class="left"><i class="title fa fa-filter"></i><span data-i18n="section-matching">Container matching</span></span></div>
         <div class="basic">
             <dl>
                 <dt data-i18n="regex">Regex:</dt>
@@ -396,6 +401,7 @@ Markdown="false"
                 </p>
             </blockquote>
         </div>
+        <div class="title"><span class="left"><i class="title fa fa-bolt"></i><span data-i18n="section-actions">Custom actions</span></span></div>
         <div class="basic custom-action-wrapper-parent">
             <dl>
                 <dt data-i18n="custom-actions-folder">Custom actions:</dt>
@@ -422,8 +428,7 @@ Markdown="false"
                 </p>
             </blockquote>
         </div>
-        <input type="submit" value="Submit" data-i18n="[value]submit">
-        <input type="button" value="Cancel" data-i18n="[value]cancel" onclick="cancelBtn()">
+        <div class="title"><span class="left"><i class="title fa fa-list"></i><span data-i18n="section-containers">Containers &amp; order</span></span></div>
         <div class="basic">
             <dl>
                 <dt data-i18n="order">Order:</dt>
@@ -435,7 +440,18 @@ Markdown="false"
                 </p>
             </blockquote>
         </div>
-        <div class="basic" style="width: 115em; text-align: center; margin-top: 3em;">
+        <div class="basic fv0-picker-toolbar">
+            <dl>
+                <dt data-i18n="picker-filter">Filter:</dt>
+                <dd>
+                    <input type="search" class="fv0-picker-search" placeholder="Search containers" data-i18n="[placeholder]picker-search" oninput="filterContainerList(this.value)">
+                    <a class="fv0-picker-action" onclick="setVisibleContainers(true)" data-i18n="picker-select-all">Select all</a>
+                    <a class="fv0-picker-action" onclick="setVisibleContainers(false)" data-i18n="picker-select-none">Select none</a>
+                    <span class="fv0-picker-count"></span>
+                </dd>
+            </dl>
+        </div>
+        <div class="basic fv0-picker" style="text-align: center;">
             <dl>
                 <dd>
                     <table class="sortable">
@@ -455,6 +471,8 @@ Markdown="false"
                 </dd>
             </dl>
         </div>
+        <input type="submit" value="Submit" data-i18n="[value]submit">
+        <input type="button" value="Cancel" data-i18n="[value]cancel" onclick="cancelBtn()">
     </form>
 </div>
 

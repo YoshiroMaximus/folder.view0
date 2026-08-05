@@ -212,12 +212,67 @@ const updateList = () => {
     $('table.sortable > tbody > tr > td > input.container-switch').switchButton({ show_labels: false });
     $('table.sortable > tbody > tr > td > input.container-switch:disabled').parent().find('*').css('opacity', '0.5').css('cursor', 'default').off().end().end().each(function() { this.checked = !this.checked; });
 
+    // Keep the count in sync with whatever the switches are doing.
+    $('table.sortable input.container-switch').on('change', updateContainerCount);
+    // Re-apply any active filter, since the rows were just rebuilt from scratch.
+    filterContainerList($('.fv0-picker-search').val() || '');
+
     // stuff for the sort table
     $('.item').css('border-color', $('body').css('color'));
 
     $('.sortable').on('dragover', sortTable).on('dragenter', (e) => { e.preventDefault(); });
 
     $('.item').on('dragstart', (e) => { e.target.classList.add("dragging") }).on('dragend', (e) => { e.target.classList.remove("dragging") });
+};
+
+/**
+ * The name shown in a picker row, used for filtering and counting.
+ * @param {HTMLElement} row the .item <tr>
+ * @returns {string} the container/VM name
+ */
+const containerRowName = (row) => $(row).find('input.container-switch').val() || '';
+
+/**
+ * Show only the rows whose name contains the query. Rows are hidden rather than removed so the
+ * drag-to-reorder order and the containers[] inputs both survive filtering.
+ * @param {string} query the search text
+ */
+const filterContainerList = (query) => {
+    const q = (query || '').trim().toLowerCase();
+    $('table.sortable > tbody > tr.item').each(function() {
+        const match = !q || containerRowName(this).toLowerCase().includes(q);
+        $(this).toggle(match);
+    });
+    updateContainerCount();
+};
+
+/**
+ * Check or uncheck every row currently visible. Regex-matched rows are disabled and left alone --
+ * they are driven by the regex field, not by hand.
+ * @param {boolean} state true to include, false to exclude
+ */
+const setVisibleContainers = (state) => {
+    $('table.sortable > tbody > tr.item:visible').find('input.container-switch').not(':disabled').each(function() {
+        if (this.checked !== state) {
+            // Drive the switchButton widget so its visual state follows the input.
+            $(this).switchButton({ checked: state });
+        }
+    });
+    updateContainerCount();
+};
+
+/**
+ * Refresh the "n of m selected" readout next to the search box.
+ */
+const updateContainerCount = () => {
+    const readout = $('.fv0-picker-count');
+    if (!readout.length) return;
+    const all = $('table.sortable > tbody > tr.item');
+    // Regex-matched rows are in the folder but their inputs are disabled and force-unchecked by
+    // updateList(), so count them from selectedRegex instead of from the DOM.
+    const picked = $('table.sortable > tbody > tr.item input.container-switch:checked').not(':disabled').length + selectedRegex.length;
+    const hidden = all.length - $('table.sortable > tbody > tr.item:visible').length;
+    readout.text(`${picked} / ${all.length} ${$.i18n('picker-selected')}` + (hidden ? ` (${hidden} ${$.i18n('picker-hidden')})` : ''));
 };
 
 /**
