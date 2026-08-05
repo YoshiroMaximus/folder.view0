@@ -6,12 +6,18 @@
 <!ENTITY launch "Settings/FolderView0">
 <!ENTITY plugdir "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/main/&name;.plg">
-<!ENTITY version "2026.08.05.1">
-<!ENTITY md5 "9a33ae83a3ad3c86801c47cb2c9f4da8">
+<!ENTITY version "2026.08.05.2">
+<!ENTITY md5 "d1caa4e72b0e7bf0fc9999a68fbddaa4">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="folder-open-o" support="https://github.com/YoshiroMaximus/folder.view0/issues" min="7.0.0">
     <CHANGES>
+
+###2026.08.05.2
+- Change: Removed the "Incorrect autostart order" banner added in 2026.08.05. Once containers are
+  grouped into folders the displayed order almost always differs from the autostart file, and this
+  plugin cannot rewrite that file, so the banner was permanent noise rather than a useful signal.
+  The underlying order comparison (fixed in 2026.08.05.1) is kept for debug logging.
 
 ###2026.08.05.1
 - Fix: The "Incorrect autostart order" warning fired for almost everyone. State.Autostart is a

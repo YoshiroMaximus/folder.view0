@@ -12,9 +12,6 @@ require_once('/usr/local/emhttp/plugins/folder.view0/langs/script.php');
     $(document).ready(() => {
         folderi18n = () => {
             $(`<input type="button" onclick="createFolderBtn()" value="Add Folder" data-i18n="[value]add-folder">`).insertAfter('table#docker_containers');
-            // Unraid dropped the "Autostart Order" nav item that docker.js used to flag; give the
-            // warning somewhere of our own to land.
-            $(`<span class="fv2-autostart-warning red-text strong" style="display:none;margin-left:12px"><i class="fa fa-warning fa-fw"></i> <span class="fv2-autostart-warning-text"></span></span>`).insertAfter('table#docker_containers');
             $('body').i18n();
             $('[type="button"]').i18n();
         }
