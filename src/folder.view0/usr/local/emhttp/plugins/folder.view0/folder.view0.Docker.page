@@ -1,0 +1,34 @@
+Menu="Docker"
+Icon="folder-open-o"
+Type="xmenu"
+Tabs="true"
+Markdown="false"
+---
+<?php
+$type = 'docker';
+require_once('/usr/local/emhttp/plugins/folder.view0/langs/script.php');
+?>
+<script>
+    $(document).ready(() => {
+        folderi18n = () => {
+            $(`<input type="button" onclick="createFolderBtn()" value="Add Folder" data-i18n="[value]add-folder">`).insertAfter('table#docker_containers');
+            // Unraid dropped the "Autostart Order" nav item that docker.js used to flag; give the
+            // warning somewhere of our own to land.
+            $(`<span class="fv2-autostart-warning red-text strong" style="display:none;margin-left:12px"><i class="fa fa-warning fa-fw"></i> <span class="fv2-autostart-warning-text"></span></span>`).insertAfter('table#docker_containers');
+            $('body').i18n();
+            $('[type="button"]').i18n();
+        }
+        folderi18n();
+    });
+</script>
+<script src="/plugins/folder.view0/scripts/include/customEvents.js"></script>
+<?php require_once('/usr/local/emhttp/plugins/folder.view0/scripts/custom.php') ?>
+
+<script src="/plugins/folder.view0/scripts/include/chart.min.js"></script>
+<script src="/plugins/folder.view0/scripts/include/moment.min.js"></script>
+<script src="/plugins/folder.view0/scripts/include/chartjs-adapter-moment.min.js"></script>
+<script src="/plugins/folder.view0/scripts/include/chartjs-plugin-streaming.min.js"></script>
+<script defer src="<?php autov('/plugins/folder.view0/scripts/docker.js')?>"></script>
+
+<link rel="stylesheet" href="<?php autov('/plugins/folder.view0/styles/docker.css')?>">
+<?php require_once('/usr/local/emhttp/plugins/folder.view0/styles/custom.php') ?>

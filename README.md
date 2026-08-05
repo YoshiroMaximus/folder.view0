@@ -1,67 +1,82 @@
-# FolderView2 For Unraid 7
+# FolderView0 for Unraid 7
 
-## What is FolderView2?
+FolderView0 lets you create folders for grouping Docker containers and VMs together to help with
+organization. Especially useful if you're using docker-compose. A button named **Add Folder** appears
+at the bottom of the Docker/VM tab next to "Add Container/VM".
 
-Original creator: [**scolcipitato**](https://github.com/scolcipitato/folder.view)
+## About this fork
 
-FolderView2 lets you create folders for grouping Dockers and VMs together to help with organization. Especially useful if you're using docker-compose.
-Getting Started: A new button named "Add Folder" will appear at the bottom of the docker/VM tab next to "Add Container/VM".
+This is a fork of [**VladoPortos/folder.view2**](https://github.com/VladoPortos/folder.view2), which
+is itself a fork of the original by [**scolcipitato**](https://github.com/scolcipitato/folder.view).
+It exists because upstream stopped tracking changes in current Unraid 7.x releases.
+
+The plugin is renamed to `folder.view0` so it installs and updates independently of upstream. Your
+existing folder definitions are carried over automatically — see [Installation](#installation).
+
+### Fixed in this fork
+
+- **Folder CPU/memory stats showed 0.** Unraid publishes container load on `/sub/dockerload` via
+  `NchanSubscriber`, which hands the callback a plain string. The aggregate handler only accepted an
+  `EventSource`-style event object, so it discarded every message and the folder row never updated.
+- **Compose and 3rd-party containers could not be foldered.** Unraid only wraps the container name in
+  a link for `dockerman`-managed containers; the row lookup required that link, so everything else was
+  silently skipped.
+- **No hover preview for compose containers** in the "Only label" preview mode, for the same reason.
+- **VM folder rows spanned 7 of the VM table's 8 columns.** The span is now read from the live table
+  header instead of being hardcoded, so it survives future column changes.
+- **The incorrect-autostart-order warning never appeared** — it targeted a nav item Unraid no longer
+  renders. It now shows next to the "Add Folder" button.
+- **`pkg_build.sh` chmod'd the entire repo** on every build, marking every archive and image as
+  modified in git.
 
 ## Installation
 
-Manual for now, need to figure out how to submit to Unraid app store.
+Paste this URL into **Plugins → Install Plugin**:
 
-### Backup
-If you already have this plugins older version setup go to Plugins -> FolderView and "Export All" your current settings!
-
-However if you arelady can't access FolderView go to Settings via UI, go to:
-
-`config\plugins\folder.view\` and backup: `docker.json` and `vm.json` 
-
-```bash
-root@PlexServer:/boot/config/plugins/folder.view# pwd
-/boot/config/plugins/folder.view
-root@PlexServer:/boot/config/plugins/folder.view# ls
-docker.json  folder.view2-2025.02.26.txz  scripts/  styles/  version  vm.json
-root@PlexServer:/boot/config/plugins/folder.view# 
+```
+https://raw.githubusercontent.com/YoshiroMaximus/folder.view0/main/folder.view0.plg
 ```
 
-### Easy Manual installation
+### Migrating from FolderView2 / FolderView
 
-Use link: https://raw.githubusercontent.com/VladoPortos/folder.view2/refs/heads/main/folder.view2.plg
+On first install, FolderView0 copies `docker.json` and `vm.json` from
+`/boot/config/plugins/folder.view2` (or `folder.view`) into `/boot/config/plugins/folder.view0`, so
+your folders come across as-is. The originals are left untouched — uninstall the old plugin once
+you've confirmed everything looks right.
 
-That link can be posted directly into the plugin install without needing to copy it to the filesystem beforehand.
-
-[![Install FolderView2](img/plugin_install.png)]
-
+Container labels used to assign containers to a folder work under any of `folder.view0`,
+`folder.view2`, or `folder.view`, so existing labels need no changes.
 
 ### Manual installation
-1. Copy the `folder.view2.plg` file to `/boot/config/plugins/` folder.
-2. Copy the latest 'folder.view2-<date>.txz' from archive folder to `/boot/config/plugins/folder.view2/` folder.
-3. In Unraid webui go to Plugins -> Install Plugin tab, click on the folder `config` -> `plugins` -> `folder.view2.plg` and press install button.
 
-## Support & Feedback
-If you have any questions or issues, please file an issue on [GitHub](https://github.com/VladoPortos/folder.view2/issues).
+1. Copy `folder.view0.plg` to `/boot/config/plugins/`.
+2. Copy the latest `archive/folder.view0-<date>.txz` to `/boot/config/plugins/folder.view0/`.
+3. In the Unraid webUI go to **Plugins → Install Plugin**, browse to `config` → `plugins` →
+   `folder.view0.plg`, and press Install.
 
-## Contributors
-- [TurboStreetCar](https://github.com/TurboStreetCar) - Contributed improved folder.js implementation for compatibility with Unraid 7 and older versions
+## Building
 
----
+`./pkg_build.sh` packages `src/folder.view0/` into `archive/`, stamps the version from today's date,
+and updates the version and MD5 in `folder.view0.plg`.
 
-## ☕ Buy Me a Coffee (or a Beer!)
+## Support & feedback
 
-If you like this project and want to support my caffeine-fueled coding sessions, you can buy me a coffee (or a beer, I won't judge! 🍻) on Ko-fi:
+File an issue on [GitHub](https://github.com/YoshiroMaximus/folder.view0/issues).
 
-[![Support me on Ko-fi](img/support_me_on_kofi_badge_red.png)](https://ko-fi.com/vladoportos)
+## Credits
 
-Every donation helps to proofe to my wife that I'm not a complete idiot :D
+- [scolcipitato](https://github.com/scolcipitato/folder.view) — original author
+- [VladoPortos](https://github.com/VladoPortos/folder.view2) — FolderView2
+- [TurboStreetCar](https://github.com/TurboStreetCar) — improved `folder.js` for Unraid 7 compatibility
+- [JohannesHo](https://github.com/JohannesHo) — docker preview layout fix
 
----
+If you found the upstream work useful, VladoPortos takes coffee at
+[ko-fi.com/vladoportos](https://ko-fi.com/vladoportos).
 
-### Libraries used in this project:
-- [Chart.js](https://www.chartjs.org/)
-- [chartjs-adapter-moment](https://github.com/chartjs/chartjs-adapter-moment)
+### Libraries used
+
+- [Chart.js](https://www.chartjs.org/), [chartjs-adapter-moment](https://github.com/chartjs/chartjs-adapter-moment),
+  [chartjs-plugin-streaming](https://github.com/nagix/chartjs-plugin-streaming)
 - [Moment.js](https://momentjs.com/)
-- [chartjs-plugin-streaming](https://github.com/nagix/chartjs-plugin-streaming)
 - [jquery.i18n](https://github.com/wikimedia/jquery.i18n)
 - [jQuery UI MultiSelect](https://github.com/ehynds/jquery-ui-multiselect-widget)
