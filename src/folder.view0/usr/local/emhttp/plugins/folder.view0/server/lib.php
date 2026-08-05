@@ -125,7 +125,6 @@
             if (!isset($host)) { $host = DockerUtil::host(); fv2_debug_log("Initialized \$host: " . $host); }
 
             $dockerClient = new DockerClient();
-            $DockerUpdate = new DockerUpdate();
             $dockerTemplates = new DockerTemplates();
 
             $cts = $dockerClient->getDockerJSON("/containers/json?all=1");
@@ -135,6 +134,22 @@
             // Unraid starts containers in the order they appear in the autostart file. Keep each
             // container's position so the UI can tell whether the displayed order still matches it.
             $autoStartPos = array_flip($autoStart);
+
+            // DockerUpdate::getUpdateStatus() calls DockerUtil::loadJSON(), which re-reads and
+            // re-decodes the whole update-status file on every call -- so asking it once per
+            // container meant N full reads of the same file. Load it once and resolve locally.
+            // Mirrors Unraid's own logic in DockerClient.php::getUpdateStatus().
+            $updateStatusAll = DockerUtil::loadJSON($dockerManPaths['update-status'] ?? '');
+            $resolveUpdateStatus = function(string $image) use ($updateStatusAll) {
+                $image = DockerUtil::ensureImageTag($image);
+                if (!isset($updateStatusAll[$image])) return null;
+                $entry = $updateStatusAll[$image];
+                if (($entry['status'] ?? null) === 'undef') return null;
+                $local = $entry['local'] ?? '';
+                $remote = $entry['remote'] ?? '';
+                if ($local || $remote) return ($local == $remote);
+                return null;
+            };
 
             $allXmlTemplates = [];
             foreach ($dockerTemplates->getTemplates('all') as $templateFile) {
@@ -173,7 +188,7 @@
                 $ct['info']['State']['Autostart'] = in_array($containerName, $autoStart);
                 $ct['info']['State']['AutostartIndex'] = $autoStartPos[$containerName] ?? false;
                 $ct['info']['Config']['Image'] = DockerUtil::ensureImageTag($ct['info']['Config']['Image']);
-                $ct['info']['State']['Updated'] = $DockerUpdate->getUpdateStatus($ct['info']['Config']['Image']);
+                $ct['info']['State']['Updated'] = $resolveUpdateStatus($ct['info']['Config']['Image']);
                 $ct['info']['State']['manager'] = $ct['Labels']['net.unraid.docker.managed'] ?? false;
                 $ct['shortId'] = substr(str_replace('sha256:', '', $ct['Id']), 0, 12);
                 $ct['shortImageId'] = substr(str_replace('sha256:', '', $ct['ImageID']), 0, 12);

@@ -6,12 +6,18 @@
 <!ENTITY launch "Settings/FolderView0">
 <!ENTITY plugdir "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/main/&name;.plg">
-<!ENTITY version "2026.08.05.4">
-<!ENTITY md5 "0e89b22c8770de2e2dda338272ebeae7">
+<!ENTITY version "2026.08.05.5">
+<!ENTITY md5 "570161c0fccb1d0c4e5dedccb2bbc63a">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="folder-open-o" support="https://github.com/YoshiroMaximus/folder.view0/issues" min="7.0.0">
     <CHANGES>
+
+###2026.08.05.5
+- Perf: The Docker tab no longer blocks page render on ~276KB of charting. Chart.js, Moment and the
+  two Chart plugins are deferred; they are only used by hover graphs but were loaded on every visit.
+- Perf: The container update-status file was re-read and re-parsed once per container, because
+  DockerUpdate::getUpdateStatus() reloads it on every call. It is now read once per request.
 
 ###2026.08.05.4
 - Revert: Undo the folder settings page changes from 2026.08.05.3. The page is back to the single
