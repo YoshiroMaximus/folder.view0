@@ -6,12 +6,17 @@
 <!ENTITY launch "Settings/FolderView0">
 <!ENTITY plugdir "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/main/&name;.plg">
-<!ENTITY version "2026.08.05.3">
-<!ENTITY md5 "38b100012be448d8a8fc84ce5b7cd4f5">
+<!ENTITY version "2026.08.05.4">
+<!ENTITY md5 "0e89b22c8770de2e2dda338272ebeae7">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="folder-open-o" support="https://github.com/YoshiroMaximus/folder.view0/issues" min="7.0.0">
     <CHANGES>
+
+###2026.08.05.4
+- Revert: Undo the folder settings page changes from 2026.08.05.3. The page is back to the single
+  flat settings list, with no section headings and no container picker search/toolbar. Published as
+  a new version rather than by reverting the plg, so installs already on .3 are actually offered it.
 
 ###2026.08.05.3
 - New: The folder settings page is grouped into labelled sections (Basics, Preview, Appearance,
