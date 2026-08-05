@@ -6,12 +6,18 @@
 <!ENTITY launch "Settings/FolderView0">
 <!ENTITY plugdir "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/main/&name;.plg">
-<!ENTITY version "2026.08.05">
-<!ENTITY md5 "cfd874f3545581c3a41b1c3afc6f91ad">
+<!ENTITY version "2026.08.05.1">
+<!ENTITY md5 "9a33ae83a3ad3c86801c47cb2c9f4da8">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="folder-open-o" support="https://github.com/YoshiroMaximus/folder.view0/issues" min="7.0.0">
     <CHANGES>
+
+###2026.08.05.1
+- Fix: The "Incorrect autostart order" warning fired for almost everyone. State.Autostart is a
+  boolean, so sorting on it was a no-op and the check compared Docker's container creation order
+  against the displayed order. The autostart file position is now recorded and used, so the warning
+  only appears on a real mismatch, and its tooltip lists both orders.
 
 ###2026.08.05
 - Fork of VladoPortos/folder.view2, renamed to folder.view0 and maintained for current Unraid 7.x.
