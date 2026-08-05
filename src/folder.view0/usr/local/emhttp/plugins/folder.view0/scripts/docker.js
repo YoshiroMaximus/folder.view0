@@ -44,15 +44,13 @@ const createFolders = async () => {
     if (FOLDER_VIEW_DEBUG_MODE) console.log('[FV2_DEBUG] createFolders: Order after inserting Unraid-ordered folders', [...order]);
 
 
-    const autostartOrder = Object.values(containersInfo).filter(el => !(el.info.State.Autostart===false)).sort((a, b) => {
-        if(a.info.State.Autostart < b.info.State.Autostart) {
-          return -1;
-        }
-          if(a.info.State.Autostart > b.info.State.Autostart) {
-          return 1;
-        }
-          return 0;
-    }).map(el => el.info.Name);
+    // The order Unraid will actually start containers in, taken from the autostart file. State.Autostart
+    // is only a boolean, so sorting on it (as this used to) is a no-op that leaves containersInfo in
+    // Docker's creation order -- which never matches the UI, making the warning below always fire.
+    const autostartOrder = Object.values(containersInfo)
+        .filter(el => Number.isInteger(el.info.State.AutostartIndex))
+        .sort((a, b) => a.info.State.AutostartIndex - b.info.State.AutostartIndex)
+        .map(el => el.info.Name);
     if (FOLDER_VIEW_DEBUG_MODE) console.log('[FV2_DEBUG] createFolders: autostartOrder', autostartOrder);
 
 
@@ -183,8 +181,11 @@ const createFolders = async () => {
         $('.nav-item.AutostartOrder.util > a > span').text($.i18n('incorrect-autostart'));
         $('.nav-item.AutostartOrder.util > a').attr('title', $.i18n('incorrect-autostart'));
         // Unraid 7.x: fall back to the warning slot the plugin adds next to the "Add Folder" button.
+        // The tooltip carries the two orders verbatim so the warning is actionable, not just red.
         $('.fv2-autostart-warning-text').text($.i18n('incorrect-autostart'));
-        $('.fv2-autostart-warning').attr('title', $.i18n('incorrect-autostart')).show();
+        $('.fv2-autostart-warning').attr('title',
+            `${$.i18n('incorrect-autostart')}\n\nStart order: ${autostartOrder.join(', ')}\nShown here: ${autostartActual.join(', ')}`
+        ).show();
     } else {
         if (FOLDER_VIEW_DEBUG_MODE) console.log('[FV2_DEBUG] createFolders: Autostart order is correct.');
         $('.fv2-autostart-warning').hide();

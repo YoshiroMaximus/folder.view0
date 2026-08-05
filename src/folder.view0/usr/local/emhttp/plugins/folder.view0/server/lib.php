@@ -132,6 +132,9 @@
             $autoStartFile = $dockerManPaths['autostart-file'] ?? "/var/lib/docker/unraid-autostart";
             $autoStartLines = @file($autoStartFile, FILE_IGNORE_NEW_LINES) ?: [];
             $autoStart = array_map('var_split', $autoStartLines);
+            // Unraid starts containers in the order they appear in the autostart file. Keep each
+            // container's position so the UI can tell whether the displayed order still matches it.
+            $autoStartPos = array_flip($autoStart);
 
             $allXmlTemplates = [];
             foreach ($dockerTemplates->getTemplates('all') as $templateFile) {
@@ -168,6 +171,7 @@
                 fv2_debug_log("Processing Container: $containerName (ID: " . ($ct['Id'] ?? 'N/A') . ")");
 
                 $ct['info']['State']['Autostart'] = in_array($containerName, $autoStart);
+                $ct['info']['State']['AutostartIndex'] = $autoStartPos[$containerName] ?? false;
                 $ct['info']['Config']['Image'] = DockerUtil::ensureImageTag($ct['info']['Config']['Image']);
                 $ct['info']['State']['Updated'] = $DockerUpdate->getUpdateStatus($ct['info']['Config']['Image']);
                 $ct['info']['State']['manager'] = $ct['Labels']['net.unraid.docker.managed'] ?? false;

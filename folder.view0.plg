@@ -7,7 +7,7 @@
 <!ENTITY plugdir "/usr/local/emhttp/plugins/&name;">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/main/&name;.plg">
 <!ENTITY version "2026.08.05">
-<!ENTITY md5 "e3bafa6c657c949250998d868cf88911">
+<!ENTITY md5 "cfd874f3545581c3a41b1c3afc6f91ad">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="folder-open-o" support="https://github.com/YoshiroMaximus/folder.view0/issues" min="7.0.0">
